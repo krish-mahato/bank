@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar ul li.active {
+            background: #555;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .positive {
+            color: green;
+        }
+
+        .negative {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Horizon</h2>
+            <ul>
+                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="my-banks.html">My Banks</a></li>
+                <li class="active"><a href="transaction-history.html">Transaction History</a></li>
+                <li><a href="transfer-funds.html">Transfer Funds</a></li>
+                <li><a href="connect-bank.html">Connect Bank</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header>
+                <h1>Transaction History</h1>
+                <p>View all your past transactions in one place.</p>
+            </header>
+            
+            <section class="transactions">
+                <h3>All Transactions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Channel</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <!-- Transactions will be added dynamically -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const transactions = [
+                { id: "TRX123456", amount: -50.00, status: "Completed", date: "Feb 15, 2025", channel: "Online", category: "Shopping" },
+                { id: "TRX789012", amount: 200.00, status: "Completed", date: "Feb 10, 2025", channel: "Bank Transfer", category: "Salary" },
+                { id: "TRX345678", amount: -20.00, status: "Pending", date: "Feb 8, 2025", channel: "Online", category: "Subscription" }
+            ];
+
+            const transactionTableBody = document.getElementById("transactionTableBody");
+
+            transactions.forEach(transaction => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td class="${transaction.amount < 0 ? 'negative' : 'positive'}">${transaction.amount < 0 ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}</td>
+                    <td>${transaction.status}</td>
+                    <td>${transaction.date}</td>
+                    <td>${transaction.channel}</td>
+                    <td>${transaction.category}</td>
+                `;
+
+                transactionTableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>

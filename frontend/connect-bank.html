@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Bank - Finance Dashboard</title>
+    <style>
+   /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+}
+
+.sidebar ul li:hover,
+.sidebar ul .active {
+    background: #34495e;
+    transition: 0.3s;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    color: #333;
+}
+
+/* Connect Bank Section */
+.connect-bank-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    max-width: 500px;
+}
+
+.connect-bank-container label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.connect-bank-container input, 
+.connect-bank-container button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.connect-bank-container button {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.connect-bank-container button:hover {
+    opacity: 0.8;
+}
+
+/* Connected Banks List */
+.connected-banks {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    max-width: 500px;
+}
+
+.connected-banks ul {
+    list-style: none;
+    padding: 0;
+}
+
+.connected-banks ul li {
+    background: #ecf0f1;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background: darkred;
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Horizon</h2>
+            <ul>
+                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="my-banks.html">My Banks</a></li>
+                <li><a href="transaction-history.html">Transaction History</a></li>
+                <li><a href="transfer-fund.html">Transfer Funds</a></li>
+                <li class="active"><a href="connect-bank.html">Connect Bank</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header>
+                <h1>Connect a Bank</h1>
+                <p>Link your bank account securely.</p>
+            </header>
+            
+            <section class="connect-bank-container">
+                <h3>Connect a New Bank</h3>
+                <form id="connectBankForm">
+                    <label for="bankName">Bank Name:</label>
+                    <input type="text" id="bankName" required>
+
+                    <label for="accountNumber">Account Number:</label>
+                    <input type="text" id="accountNumber" required>
+
+                    <label for="ifscCode">IFSC Code:</label>
+                    <input type="text" id="ifscCode" required>
+
+                    <button type="submit">Connect Bank</button>
+                </form>
+            </section>
+
+            <section class="connected-banks">
+                <h3>Connected Banks</h3>
+                <ul id="connectedBanksList"></ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const connectBankForm = document.getElementById("connectBankForm");
+            const connectedBanksList = document.getElementById("connectedBanksList");
+
+            // Load connected banks from local storage
+            const loadConnectedBanks = () => {
+                const banks = JSON.parse(localStorage.getItem("connectedBanks")) || [];
+                connectedBanksList.innerHTML = "";
+                banks.forEach((bank, index) => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        ${bank.name} (Acc: ${bank.account}, IFSC: ${bank.ifsc})
+                        <button class="delete-btn" onclick="deleteBank(${index})">Delete</button>
+                    `;
+                    connectedBanksList.appendChild(listItem);
+                });
+            };
+
+            // Connect a bank
+            connectBankForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const bankName = document.getElementById("bankName").value;
+                const accountNumber = document.getElementById("accountNumber").value;
+                const ifscCode = document.getElementById("ifscCode").value;
+
+                if (bankName.trim() === "" || accountNumber.trim() === "" || ifscCode.trim() === "") {
+                    alert("Please enter valid bank details.");
+                    return;
+                }
+
+                const newBank = { name: bankName, account: accountNumber, ifsc: ifscCode };
+                const banks = JSON.parse(localStorage.getItem("connectedBanks")) || [];
+                banks.push(newBank);
+                localStorage.setItem("connectedBanks", JSON.stringify(banks));
+
+                alert("Bank Connected Successfully!");
+                connectBankForm.reset();
+                loadConnectedBanks();
+            });
+
+            // Delete bank
+            window.deleteBank = (index) => {
+                const banks = JSON.parse(localStorage.getItem("connectedBanks")) || [];
+                banks.splice(index, 1);
+                localStorage.setItem("connectedBanks", JSON.stringify(banks));
+                loadConnectedBanks();
+            };
+
+            loadConnectedBanks();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Funds - Finance Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar ul li:hover,
+        .sidebar ul .active {
+            background: #34495e;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Transfer Form */
+        .transfer-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            max-width: 400px;
+        }
+
+        .transfer-form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .transfer-form input, 
+        .transfer-form select, 
+        .transfer-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .transfer-form button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .transfer-form button:hover {
+            opacity: 0.8;
+        }
+
+        /* Transaction List */
+        .transaction-summary {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .transaction-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .transaction-summary ul li {
+            background: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Horizon</h2>
+            <ul>
+                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="my-banks.html">My Banks</a></li>
+                <li><a href="transaction-history.html">Transaction History</a></li>
+                <li class="active"><a href="transfer-fund.html">Transfer Funds</a></li>
+                <li><a href="connect-bank.html">Connect Bank</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header>
+                <h1>Transfer Funds</h1>
+                <p>Securely transfer money between your accounts.</p>
+            </header>
+            
+            <section class="transfer-form">
+                <form id="transferForm">
+                    <label for="fromAccount">From Account:</label>
+                    <select id="fromAccount" required>
+                        <option value="Bank A">Bank A</option>
+                        <option value="Bank B">Bank B</option>
+                    </select>
+
+                    <label for="toAccount">To Account:</label>
+                    <select id="toAccount" required>
+                        <option value="Bank B">Bank B</option>
+                        <option value="Bank A">Bank A</option>
+                    </select>
+
+                    <label for="amount">Amount ($):</label>
+                    <input type="number" id="amount" required min="1">
+
+                    <button type="submit">Transfer</button>
+                </form>
+            </section>
+
+            <section class="transaction-summary">
+                <h3>Recent Transfers</h3>
+                <ul id="transactionList"></ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const transferForm = document.getElementById("transferForm");
+            const transactionList = document.getElementById("transactionList");
+
+            transferForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const fromAccount = document.getElementById("fromAccount").value;
+                const toAccount = document.getElementById("toAccount").value;
+                const amount = document.getElementById("amount").value;
+
+                if (fromAccount === toAccount) {
+                    alert("Cannot transfer between the same account.");
+                    return;
+                }
+
+                const transaction = `Transferred $${amount} from ${fromAccount} to ${toAccount}`;
+                const listItem = document.createElement("li");
+                listItem.textContent = transaction;
+                transactionList.appendChild(listItem);
+
+                alert("Transaction Successful!");
+                transferForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
